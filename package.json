@@ -19,6 +19,16 @@
   },
   "homepage": "https://github.com/Coyls/datavise#readme",
   "dependencies": {
-    "csvtojson": "^2.0.10"
+    "csvtojson": "^2.0.10",
+    "json-loader": "^0.5.7",
+    "neo4j-driver": "^4.3.3"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
