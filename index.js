@@ -1,5 +1,5 @@
 import csv from 'csvtojson';
-const csvFilePath = '/home/coyls/Bureau/datavise/jo.csv'
+const csvFilePath = './raw-data/JO.csv'
 import fs from 'fs'
 
 const jsonArray = await csv().fromFile(csvFilePath);

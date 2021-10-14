@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "csv-country": "json2csv -i ./data-json/country.json -f name,noc -o ./data-csv/country.csv",
+    "csv-athlete": "json2csv -i ./data-json/athlete.json -f name,sex,height,wheight -o ./data-csv/athlete.csv"
   },
   "repository": {
     "type": "git",
