@@ -5,8 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "csv-country": "json2csv -i ./data-json/country.json -f name,noc -o ./data-csv/country.csv",
-    "csv-athlete": "json2csv -i ./data-json/athlete.json -f name,sex,height,wheight -o ./data-csv/athlete.csv"
+    "start": "node -r dotenv/config index.js",
+    "json-country": "node -r dotenv/config ./database/scripts/country.js",
+    "csv-country": "json2csv -i ./database/data-json/country.json -f name,noc -o ./database/data-csv/country.csv",
+    "json-athlete": "node -r dotenv/config ./database/scripts/athlete",
+    "csv-athlete": "json2csv -i ./database/data-json/athlete.json -f name,sex,height,wheight -o ./database/data-csv/athlete.csv"
   },
   "repository": {
     "type": "git",
@@ -20,11 +23,11 @@
   },
   "homepage": "https://github.com/Coyls/datavise#readme",
   "dependencies": {
-    "csvtojson": "^2.0.10",
-    "json-loader": "^0.5.7",
+    "dotenv": "^10.0.0",
     "neo4j-driver": "^4.3.3"
   },
   "devDependencies": {
+    "csvtojson": "^2.0.10",
     "cz-conventional-changelog": "^3.3.0"
   },
   "config": {

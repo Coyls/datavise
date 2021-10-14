@@ -1,4 +1,6 @@
-neo4j-volumes
+### Docker ###
+neo4j
+
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
