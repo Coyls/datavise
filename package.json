@@ -7,13 +7,15 @@
   "scripts": {
     "start": "node -r dotenv/config index.js",
     "rm-data": "rm ./database/data-json/* && rm ./database/data-csv/*",
-    "country": "node -r dotenv/config ./database/scripts/country.js && json2csv -i ./database/data-json/country.json -f id,name,noc -o ./database/data-csv/country.csv",
+    "country": "node -r dotenv/config ./database/scripts/country.js && json2csv -i ./database/data-json/country.json -f noc,name -o ./database/data-csv/country.csv",
     "athlete": "node -r dotenv/config ./database/scripts/athlete.js && json2csv -i ./database/data-json/athlete.json -f id,name,sex,height,wheight -o ./database/data-csv/athlete.csv",
     "sport": "node -r dotenv/config ./database/scripts/sport.js && json2csv -i ./database/data-json/sport.json -f id,name -o ./database/data-csv/sport.csv",
     "year": "node -r dotenv/config ./database/scripts/year.js && json2csv -i ./database/data-json/year.json -f year -o ./database/data-csv/year.csv",
     "season": "node -r dotenv/config ./database/scripts/season.js && json2csv -i ./database/data-json/season.json -f id,name -o ./database/data-csv/season.csv",
-    "event" : "node -r dotenv/config ./database/scripts/event.js && json2csv -i ./database/data-json/event.json -f id,name,id_sport -o ./database/data-csv/event.csv",
-    "graph" : "npm run country && npm run year && npm run sport && npm run season && npm run event"
+    "event": "node -r dotenv/config ./database/scripts/event.js && json2csv -i ./database/data-json/event.json -f id,name,id_sport -o ./database/data-csv/event.csv",
+    "age": "node -r dotenv/config ./database/scripts/age.js && json2csv -i ./database/data-json/age.json -f id,age,year,id_athlete -o ./database/data-csv/age.csv",
+    "city": "json2csv -i ./database/raw-data/city.json -f id,noc,name,lat,lng -o ./database/data-csv/city.csv",
+    "graph": "npm run country && npm run year && npm run sport && npm run season && npm run event && npm run athlete && npm run age && npm run city"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "neo4j-driver": "^4.3.3"
   },
   "devDependencies": {
+    "cities.json": "^1.1.5",
     "csvtojson": "^2.0.10",
     "cz-conventional-changelog": "^3.3.0"
   },

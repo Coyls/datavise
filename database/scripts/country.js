@@ -21,9 +21,8 @@ jsonArray.forEach(country => {
         checkCountry.push(country.Team)
 
         countries.push({
-            id: countryId,
+            noc: country.NOC,
             name: country.Team,
-            noc: country.NOC
         })
 
         countryId++
