@@ -15,7 +15,8 @@
     "event": "node -r dotenv/config ./database/scripts/event.js && json2csv -i ./database/data-json/event.json -f id,name,id_sport -o ./database/data-csv/event.csv",
     "age": "node -r dotenv/config ./database/scripts/age.js && json2csv -i ./database/data-json/age.json -f id,age,year,id_athlete -o ./database/data-csv/age.csv",
     "city": "json2csv -i ./database/raw-data/city.json -f id,noc,name,lat,lng -o ./database/data-csv/city.csv",
-    "graph": "npm run country && npm run year && npm run sport && npm run season && npm run event && npm run athlete && npm run age && npm run city"
+    "gpd": "node -r dotenv/config ./database/scripts/gpd.js && json2csv -i ./database/data-json/gpd.json -f id,noc,year,value -o ./database/data-csv/gpd.csv",
+    "graph": "npm run country && npm run year && npm run sport && npm run season && npm run event && npm run athlete && npm run age && npm run city && npm run gpd"
   },
   "repository": {
     "type": "git",
