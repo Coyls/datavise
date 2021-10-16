@@ -2,8 +2,6 @@ import csv from 'csvtojson';
 import fs from 'fs'
 import { env } from 'process';
 
-// COMMAND CSV : npm run csv-country
-
 const csvFilePath = env.DATA_RAW + 'JO.csv'
 const jsonFilePath = env.DATA_JSON + 'country.json'
 
@@ -11,24 +9,28 @@ const jsonArray = await csv().fromFile(csvFilePath);
 
 let checkCountry = []
 let countries = []
+let countryId = 0
 
-jsonArray.forEach(c => {
+jsonArray.forEach(country => {
 
     let exist = false
 
-    if (checkCountry.findIndex(check => check === c.Team) !== -1) exist = true
+    if (checkCountry.findIndex(check => check === country.Team) !== -1) exist = true
 
     if (!exist) {
-        checkCountry.push(c.Team)
+        checkCountry.push(country.Team)
 
         countries.push({
-            name: c.Team,
-            noc: c.NOC
+            id: countryId,
+            name: country.Team,
+            noc: country.NOC
         })
+
+        countryId++
     }
 })
 
-console.log('country', countries)
-fs.writeFile(jsonFilePath, JSON.stringify(countries), () => console.log("Country create !"))
+console.log(countries.length + " countries has been created !")
+fs.writeFile(jsonFilePath, JSON.stringify(countries), () => console.log("country.csv created !"))
 
 

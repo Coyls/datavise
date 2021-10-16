@@ -6,10 +6,14 @@
   "type": "module",
   "scripts": {
     "start": "node -r dotenv/config index.js",
-    "json-country": "node -r dotenv/config ./database/scripts/country.js",
-    "csv-country": "json2csv -i ./database/data-json/country.json -f name,noc -o ./database/data-csv/country.csv",
-    "json-athlete": "node -r dotenv/config ./database/scripts/athlete",
-    "csv-athlete": "json2csv -i ./database/data-json/athlete.json -f name,sex,height,wheight -o ./database/data-csv/athlete.csv"
+    "rm-data": "rm ./database/data-json/* && rm ./database/data-csv/*",
+    "country": "node -r dotenv/config ./database/scripts/country.js && json2csv -i ./database/data-json/country.json -f id,name,noc -o ./database/data-csv/country.csv",
+    "athlete": "node -r dotenv/config ./database/scripts/athlete.js && json2csv -i ./database/data-json/athlete.json -f id,name,sex,height,wheight -o ./database/data-csv/athlete.csv",
+    "sport": "node -r dotenv/config ./database/scripts/sport.js && json2csv -i ./database/data-json/sport.json -f id,name -o ./database/data-csv/sport.csv",
+    "year": "node -r dotenv/config ./database/scripts/year.js && json2csv -i ./database/data-json/year.json -f year -o ./database/data-csv/year.csv",
+    "season": "node -r dotenv/config ./database/scripts/season.js && json2csv -i ./database/data-json/season.json -f id,name -o ./database/data-csv/season.csv",
+    "event" : "node -r dotenv/config ./database/scripts/event.js && json2csv -i ./database/data-json/event.json -f id,name,id_sport -o ./database/data-csv/event.csv",
+    "graph" : "npm run country && npm run year && npm run sport && npm run season && npm run event"
   },
   "repository": {
     "type": "git",

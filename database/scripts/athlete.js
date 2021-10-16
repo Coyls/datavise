@@ -2,8 +2,6 @@ import csv from 'csvtojson';
 import fs from 'fs'
 import { env } from 'process';
 
-// COMMAND CSV : npm run csv-athlete
-
 const csvFilePath = env.DATA_RAW + 'JO.csv'
 const jsonFilePath = env.DATA_JSON + 'athlete.json'
 
@@ -11,30 +9,34 @@ const jsonArray = await csv().fromFile(csvFilePath);
 
 let checkAthlete = []
 let athletes = []
+let athleteId = 0
 
-jsonArray.forEach(person => {
+jsonArray.forEach(athlete => {
 
     let exist = false
 
-    if (checkAthlete.findIndex(check => check === person.Name) !== -1) exist = true
+    if (checkAthlete.findIndex(check => check === athlete.Name) !== -1) exist = true
 
     if (!exist) {
-        checkAthlete.push(person.Name)
+        checkAthlete.push(athlete.Name)
 
-        const height = (person.Height !== 'NA') ? person.Height : null
-        const wheight = (person.Weight !== 'NA') ? person.Weight : null
+        const height = (athlete.Height !== 'NA') ? athlete.Height : null
+        const wheight = (athlete.Weight !== 'NA') ? athlete.Weight : null
 
         athletes.push({
-            name: person.Name,
-            sex: person.Sex,
+            id: athleteId,
+            name: athlete.Name,
+            sex: athlete.Sex,
             height,
             wheight,
-            team: person.Team
+            team: athlete.Team
         })
+
+        athleteId++
     }
 })
 
-console.log('athletes:', athletes)
-fs.writeFile(jsonFilePath, JSON.stringify(athletes), () => console.log("Athlete create !"))
+console.log(athletes.length + " athletes has been created !")
+fs.writeFile(jsonFilePath, JSON.stringify(athletes), () => console.log("athlete.csv created !"))
 
 
