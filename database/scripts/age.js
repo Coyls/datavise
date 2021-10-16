@@ -25,9 +25,11 @@ jsonArray.forEach(age => {
         id_athlete: id
     }
 
-    if (ages.findIndex(({ age, year, id_athlete }) => age === ageToPush.age && year === ageToPush.year && id_athlete === ageToPush.id_athlete) === -1) ages.push({ id: ageId, ...ageToPush })
+    if (ages.findIndex(({ age, year, id_athlete }) => age === ageToPush.age && year === ageToPush.year && id_athlete === ageToPush.id_athlete) === -1) {
+        ages.push({ id: ageId, ...ageToPush })
+        ageId++
+    }
 
-    ageId++
 })
 
 console.log(ages.length + " ages has been created !")

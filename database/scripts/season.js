@@ -6,12 +6,10 @@ const jsonFilePath = env.DATA_JSON + 'season.json'
 
 const seasons = [
     {
-        id: 0,
-        name: "Summer"
+        season: "summer"
     },
     {
-        id: 1,
-        name: "Winter"
+        season: "winter"
     }
 ]
 
