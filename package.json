@@ -14,7 +14,7 @@
     "season": "node -r dotenv/config ./database/scripts/season.js && json2csv -i ./database/data-json/season.json -f season -o ./database/data-csv/season.csv",
     "event": "node -r dotenv/config ./database/scripts/event.js && json2csv -i ./database/data-json/event.json -f id,name,id_sport -o ./database/data-csv/event.csv",
     "age": "node -r dotenv/config ./database/scripts/age.js && json2csv -i ./database/data-json/age.json -f id,age,year,id_athlete -o ./database/data-csv/age.csv",
-    "city": "json2csv -i ./database/raw-data/city.json -f id,noc,name,lat,lng -o ./database/data-csv/city.csv && cp ./database/raw-data/city.json ./database/data-json/city.json",
+    "city": "json2csv -i ./database/raw-data/CITY.json -f id,noc,name,lat,lng -o ./database/data-csv/city.csv && cp ./database/raw-data/CITY.json ./database/data-json/city.json",
     "gpd": "node -r dotenv/config ./database/scripts/gpd.js && json2csv -i ./database/data-json/gpd.json -f id,noc,year,value -o ./database/data-csv/gpd.csv",
     "jo": "node -r dotenv/config ./database/scripts/jo.js && json2csv -i ./database/data-json/jo.json -f id,year,id_city,season -o ./database/data-csv/jo.csv",
     "medal": "node -r dotenv/config ./database/scripts/medal.js && json2csv -i ./database/data-json/medal.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal.csv",

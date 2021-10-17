@@ -21,7 +21,7 @@ jsonArray.forEach(age => {
 
     const ageToPush = {
         age: age.Age,
-        year: age.year,
+        year: age.Year,
         id_athlete: id
     }
 

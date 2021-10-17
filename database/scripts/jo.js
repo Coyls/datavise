@@ -33,7 +33,6 @@ jsonArray.forEach(jo => {
 
 
 })
-console.log('jos:', jos)
 
 console.log(jos.length + " jos has been created !")
 fs.writeFile(jsonFilePath, JSON.stringify(jos), () => console.log("jo.csv created !"))
