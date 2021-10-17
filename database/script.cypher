@@ -1,14 +1,14 @@
 CREATE CONSTRAINT ageIdConstraint ON (c:Age) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT countryIdConstraint ON (c:Country) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT rpdIdConstraint ON (c:Rpd) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT yearIdConstraint ON (c:Year) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT cityIdConstraint ON (c:City) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT joIdConstraint ON (c:Jo) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT athleteIdConstraint ON (c:Athlete) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT seasonIdConstraint ON (c:Season) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT cityIdConstraint ON (c:City) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT countryIdConstraint ON (c:Country) ASSERT c.noc IS UNIQUE;
 CREATE CONSTRAINT eventIdConstraint ON (c:Event) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT gpdIdConstraint ON (c:Gpd) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT joIdConstraint ON (c:Jo) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT seasonIdConstraint ON (c:Season) ASSERT c.season IS UNIQUE;
 CREATE CONSTRAINT sportIdConstraint ON (c:Sport) ASSERT c.id IS UNIQUE;
+CREATE CONSTRAINT yearIdConstraint ON (c:Year) ASSERT c.year IS UNIQUE;
 
 
 LOAD CSV WITH HEADERS FROM "file:///country.csv" AS row
