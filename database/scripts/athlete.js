@@ -29,7 +29,8 @@ jsonArray.forEach(athlete => {
             sex: athlete.Sex,
             height,
             wheight,
-            team: athlete.Team
+            team: athlete.Team,
+            noc: athlete.NOC
         })
 
         athleteId++

@@ -1,33 +1,22 @@
-import csv from 'csvtojson';
 import fs from 'fs'
 import { env } from 'process';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
-const csvFilePath = env.DATA_RAW + 'JO.csv'
+const csvFilePath = env.DATA_RAW + 'NOC.json'
 const jsonFilePath = env.DATA_JSON + 'country.json'
 
-const jsonArray = await csv().fromFile(csvFilePath);
+const NOC = require(csvFilePath);
 
-let checkCountry = []
-let countries = []
-let countryId = 0
+let countries = NOC.map(country => {
 
-jsonArray.forEach(country => {
-
-    let exist = false
-
-    if (checkCountry.findIndex(check => check === country.Team) !== -1) exist = true
-
-    if (!exist) {
-        checkCountry.push(country.Team)
-
-        countries.push({
-            noc: country.NOC,
-            name: country.Team,
-        })
-
-        countryId++
+    return {
+        noc: country.noc,
+        name: country.name
     }
 })
+
+countries.push({ noc: "EUN", name: "Unified Team" })
 
 console.log(countries.length + " countries has been created !")
 fs.writeFile(jsonFilePath, JSON.stringify(countries), () => console.log("country.csv created !"))
