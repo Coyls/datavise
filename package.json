@@ -18,7 +18,8 @@
     "gpd": "node -r dotenv/config ./database/scripts/gpd.js && json2csv -i ./database/data-json/gpd.json -f id,noc,year,value -o ./database/data-csv/gpd.csv",
     "jo": "node -r dotenv/config ./database/scripts/jo.js && json2csv -i ./database/data-json/jo.json -f id,year,id_city,season -o ./database/data-csv/jo.csv",
     "medal": "node -r dotenv/config ./database/scripts/medal.js && json2csv -i ./database/data-json/medal.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal.csv",
-    "generate-csv": "npm run country && npm run year && npm run sport && npm run event && npm run season && npm run gpd && npm run city && npm run jo && npm run athlete && npm run age && npm run medal"
+    "generate-csv": "npm run country && npm run year && npm run sport && npm run event && npm run season && npm run gpd && npm run city && npm run jo && npm run athlete && npm run age && npm run medal",
+    "copy-import": "cp ./database/data-csv/* ./database/neo4j/import/"
   },
   "repository": {
     "type": "git",
