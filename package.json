@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node -r dotenv/config index.js",
+    "start": "node -r dotenv/config ./server/index.js",
+    "dev": "nodemon -r dotenv/config ./server/index.js",
     "rm-data": "rm ./database/data-json/* && rm ./database/data-csv/*",
     "country": "node -r dotenv/config ./database/scripts/country.js && json2csv -i ./database/data-json/country.json -f noc,name -o ./database/data-csv/country.csv",
     "athlete": "node -r dotenv/config ./database/scripts/athlete.js && json2csv -i ./database/data-json/athlete.json -f id,name,sex,height,wheight,team,noc -o ./database/data-csv/athlete.csv",
@@ -18,7 +19,8 @@
     "gpd": "node -r dotenv/config ./database/scripts/gpd.js && json2csv -i ./database/data-json/gpd.json -f id,noc,year,value -o ./database/data-csv/gpd.csv",
     "jo": "node -r dotenv/config ./database/scripts/jo.js && json2csv -i ./database/data-json/jo.json -f id,year,id_city,season -o ./database/data-csv/jo.csv",
     "medal": "node -r dotenv/config ./database/scripts/medal.js && json2csv -i ./database/data-json/medal.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal.csv",
-    "generate-csv": "npm run country && npm run year && npm run sport && npm run event && npm run season && npm run gpd && npm run city && npm run jo && npm run athlete && npm run age && npm run medal"
+    "generate-csv": "npm run country && npm run year && npm run sport && npm run event && npm run season && npm run gpd && npm run city && npm run jo && npm run athlete && npm run age && npm run medal",
+    "copy-import": "cp ./database/data-csv/* ./database/neo4j/import/"
   },
   "repository": {
     "type": "git",
@@ -32,13 +34,14 @@
   },
   "homepage": "https://github.com/Coyls/datavise#readme",
   "dependencies": {
+    "csvtojson": "^2.0.10",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "neo4j-driver": "^4.3.3"
   },
   "devDependencies": {
-    "cities.json": "^1.1.5",
-    "csvtojson": "^2.0.10",
-    "cz-conventional-changelog": "^3.3.0"
+    "cz-conventional-changelog": "^3.3.0",
+    "nodemon": "^2.0.13"
   },
   "config": {
     "commitizen": {
