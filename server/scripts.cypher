@@ -5,4 +5,4 @@ WHERE medal.type <> "none"
 MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete)
 MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country)
 MATCH (gpd)-[:GPD_IN_COUNTRY]->(country)
-RETURN DISTINCT country.name, count(medal), gpd.value ORDER BY toInteger(gpd.value) DESC
+RETURN DISTINCT country.name as Country, year.year as Year, count(medal) as Medals, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC
