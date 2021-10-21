@@ -46,12 +46,31 @@ CREATE (jo)-[:JO_IN_SEASON]->(season)
 CREATE (jo)-[:JO_IN_YEAR]->(year)
 CREATE (jo)-[:JO_IN_CITY]->(city)
 
-LOAD CSV WITH HEADERS FROM "file:///athlete.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///athlete_1.csv" AS row
 MATCH (country:Country {noc:row.noc})
 CREATE (athlete:Athlete {id: row.id, name:row.name, sex: row.sex, height: row.height, wheight: row.wheight, team: row.team})
 CREATE (athlete)-[:ATHLETE_FROM_COUNTRY]->(country)
 
-LOAD CSV WITH HEADERS FROM "file:///medal.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///athlete_2.csv" AS row
+MATCH (country:Country {noc:row.noc})
+CREATE (athlete:Athlete {id: row.id, name:row.name, sex: row.sex, height: row.height, wheight: row.wheight, team: row.team})
+CREATE (athlete)-[:ATHLETE_FROM_COUNTRY]->(country)
+
+LOAD CSV WITH HEADERS FROM "file:///medal_1.csv" AS row
+MATCH (jo:Jo {id: row.id_jo}),(event:Event {id: row.id_event}),(athlete:Athlete {id: row.id_athlete})
+CREATE (medal:Medal {id: row.id, type: row.type})
+CREATE (medal)-[:MEDAL_IN_JO]->(jo)
+CREATE (medal)-[:MEDAL_IN_EVENT]->(event)
+CREATE (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete)
+
+LOAD CSV WITH HEADERS FROM "file:///medal_2.csv" AS row
+MATCH (jo:Jo {id: row.id_jo}),(event:Event {id: row.id_event}),(athlete:Athlete {id: row.id_athlete})
+CREATE (medal:Medal {id: row.id, type: row.type})
+CREATE (medal)-[:MEDAL_IN_JO]->(jo)
+CREATE (medal)-[:MEDAL_IN_EVENT]->(event)
+CREATE (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete)
+
+LOAD CSV WITH HEADERS FROM "file:///medal_3.csv" AS row
 MATCH (jo:Jo {id: row.id_jo}),(event:Event {id: row.id_event}),(athlete:Athlete {id: row.id_athlete})
 CREATE (medal:Medal {id: row.id, type: row.type})
 CREATE (medal)-[:MEDAL_IN_JO]->(jo)
