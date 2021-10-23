@@ -29,11 +29,15 @@ let medalId = 0
 
 jsonArray.forEach(medal => {
 
+    if (medal.Year < 1960) return
+
     const seasonToCheck = medal.Season
 
     const jo = jos.find(jo => jo.year === medal.Year && jo.season === seasonToCheck.toLowerCase())
     const event = events.find(event => event.name === medal.Event)
     const athlete = athletes.find(athlete => athlete.name === medal.Name)
+
+    if (!jo) console.log(medal)
 
     const type = (medal.Medal === "NA") ? "none" : medal.Medal
 
@@ -47,11 +51,11 @@ jsonArray.forEach(medal => {
 
 
 
-    if (medalId <= 100000) {
+    if (medalId <= 75000) {
         medals_1.push(medalToPush)
-    } else if (medalId > 100000 && medalId <= 200000) {
+    } else if (medalId > 75000 && medalId <= 150000) {
         medals_2.push(medalToPush)
-    } else if (medalId > 200000) {
+    } else if (medalId > 150000) {
         medals_3.push(medalToPush)
     }
 

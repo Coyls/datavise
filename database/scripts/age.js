@@ -7,9 +7,12 @@ const require = createRequire(import.meta.url);
 const csvFilePath = env.DATA_RAW + 'JO.csv'
 const jsonFilePath = env.DATA_JSON + 'age.json'
 
-const athletesFilePath = env.DATA_JSON + 'athlete.json'
+const athleteFilePath1 = env.DATA_JSON + 'athlete_1.json'
+const athleteFilePath2 = env.DATA_JSON + 'athlete_2.json'
+const athletes1 = require(athleteFilePath1)
+const athletes2 = require(athleteFilePath2)
 
-const athletes = require(athletesFilePath)
+const athletes = [...athletes1, ...athletes2]
 const jsonArray = await csv().fromFile(csvFilePath);
 
 let ages = []

@@ -1,11 +1,16 @@
 import csv from 'csvtojson';
 import fs from 'fs'
 import { env } from 'process';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 const csvFilePath = env.DATA_RAW + 'JO.csv'
+const countriesFilePath = env.DATA_JSON + 'country.json'
 const jsonFilePath1 = env.DATA_JSON + 'athlete_1.json'
 const jsonFilePath2 = env.DATA_JSON + 'athlete_2.json'
 
+
+const countries = require(countriesFilePath)
 const jsonArray = await csv().fromFile(csvFilePath);
 
 let checkAthlete = []
@@ -14,19 +19,20 @@ let athletes_2 = []
 let athleteId = 0
 
 
-
-
 jsonArray.forEach(athlete => {
 
     let exist = false
 
     if (checkAthlete.findIndex(check => check === athlete.Name) !== -1) exist = true
 
-    if (!exist) {
+    if (!exist && athlete.Year >= 1960) {
         checkAthlete.push(athlete.Name)
 
         const height = (athlete.Height !== 'NA') ? athlete.Height : null
         const wheight = (athlete.Weight !== 'NA') ? athlete.Weight : null
+        let country = countries.find(country => country.noc === athlete.NOC)
+
+        if (!country) country = { id: null }
 
         const athleteToPush = {
             id: athleteId,
@@ -35,12 +41,12 @@ jsonArray.forEach(athlete => {
             height,
             wheight,
             team: athlete.Team,
-            noc: athlete.NOC
+            id_country: country.id,
         }
 
-        if (athleteId <= 75000) {
+        if (athleteId <= 50000) {
             athletes_1.push(athleteToPush)
-        } else if (athleteId > 75000) {
+        } else if (athleteId > 50000) {
             athletes_2.push(athleteToPush)
         }
 
@@ -49,7 +55,6 @@ jsonArray.forEach(athlete => {
     }
 })
 
-// rajouter pour les 2 autre fivhire
 
 console.log(athletes_1.length + " athletes has been created !")
 fs.writeFile(jsonFilePath1, JSON.stringify(athletes_1), () => console.log("athletes_1.csv created !"))

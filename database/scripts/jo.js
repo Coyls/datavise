@@ -17,15 +17,17 @@ let joId = 0
 
 jsonArray.forEach(jo => {
 
-    const { id } = cities.find(city => city.name === jo.City)
+    const city = cities.find(city => city.name === jo.City)
+
+    if (!city) return
 
     const joToPush = {
         year: jo.Year,
-        id_city: id,
+        id_city: city.id,
         season: jo.Season.toLowerCase()
     }
 
-    if (jos.findIndex(({ year, id_city, season }) => year === joToPush.year && id_city === joToPush.id_city && season === joToPush.season) === -1) {
+    if (jos.findIndex(({ year, id_city, season }) => year === joToPush.year && id_city === joToPush.id_city && season === joToPush.season) === -1 && jo.Year >= 1960) {
         jos.push({ id: joId, ...joToPush })
         joId++
     }
