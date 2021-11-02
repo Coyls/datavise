@@ -17,7 +17,7 @@ app.listen(port, () => {
 (async () => {
   const driver = neo4j.driver(
     "bolt://neo4j:7687",
-    neo4j.auth.basic("neo4j", "tocos74")
+    neo4j.auth.basic(process.env.USER_NEO4J, process.env.MDP_NEOJ4)
   );
   const session = driver.session();
 
