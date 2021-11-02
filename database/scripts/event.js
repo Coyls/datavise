@@ -20,6 +20,8 @@ jsonArray.forEach(event => {
 
     let exist = false
 
+    if (event.Year < 1960) return
+
     if (checkEvent.findIndex(check => check === event.Event) !== -1) exist = true
 
     if (!exist) {

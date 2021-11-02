@@ -15,6 +15,8 @@ jsonArray.forEach(sport => {
 
     let exist = false
 
+    if (sport.Year < 1960) return
+
     if (checkSport.findIndex(check => check === sport.Sport) !== -1) exist = true
 
     if (!exist) {

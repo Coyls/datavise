@@ -2,33 +2,25 @@ import csv from 'csvtojson';
 import fs from 'fs'
 import { env } from 'process';
 
-const csvFilePath = env.DATA_RAW + 'JO.csv'
+
+const csvFilePath = env.DATA_RAW + 'country-codes.csv'
 const jsonFilePath = env.DATA_JSON + 'country.json'
 
 const jsonArray = await csv().fromFile(csvFilePath);
 
-let checkCountry = []
-let countries = []
-let countryId = 0
 
-jsonArray.forEach(country => {
+let countries = jsonArray.map((country, id) => {
 
-    let exist = false
+    const name = (country["UNTERM English Short"] !== "") ? country["UNTERM English Short"] : country["CLDR display name"]
 
-    if (checkCountry.findIndex(check => check === country.Team) !== -1) exist = true
-
-    if (!exist) {
-        checkCountry.push(country.Team)
-
-        countries.push({
-            id: countryId,
-            name: country.Team,
-            noc: country.NOC
-        })
-
-        countryId++
+    return {
+        id,
+        name,
+        iso: country["ISO3166-1-Alpha-3"],
+        noc: country.IOC
     }
 })
+
 
 console.log(countries.length + " countries has been created !")
 fs.writeFile(jsonFilePath, JSON.stringify(countries), () => console.log("country.csv created !"))

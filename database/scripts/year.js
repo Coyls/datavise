@@ -3,7 +3,7 @@ import { env } from 'process';
 
 const jsonFilePath = env.DATA_JSON + 'year.json'
 
-let startYear = 1896
+let startYear = 1960
 let years = []
 
 while (startYear !== 2021) {
