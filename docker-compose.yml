@@ -1,5 +1,19 @@
 version: "3.7"
 services:
+  server:
+    build:
+      context: .
+    env_file:
+      - ./.env
+    command: npm run dev
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - neo4j
+    networks:
+      - backend
   neo4j:
     image: neo4j
     ports:
@@ -17,3 +31,9 @@ services:
       - ./database/neo4j/plugins:/plugins
       - ./database/neo4j/neo4j:/data
       - ./database/neo4j/import:/import
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend
