@@ -1,3 +1,5 @@
+// Liste des pays avec leur nombre de medail gagner et leur pib pour une année 
+
 MATCH (year:Year) WHERE year.year = "2016"
 MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year)
 MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal)
