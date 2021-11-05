@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "prebuild": "eslint . --ext .ts,.js",
     "build": "tsc",
@@ -19,6 +20,7 @@
     "age": "node -r dotenv/config ./database/scripts/age.js && json2csv -i ./database/data-json/age.json -f id,age,year,id_athlete -o ./database/data-csv/age.csv",
     "city": "node -r dotenv/config ./database/scripts/city.js && json2csv -i ./database/data-json/city.json -f id,name,id_country,lat,lng -o ./database/data-csv/city.csv",
     "gpd": "node -r dotenv/config ./database/scripts/gpd.js && json2csv -i ./database/data-json/gpd.json -f id,id_country,year,value -o ./database/data-csv/gpd.csv",
+    "population": "node -r dotenv/config ./database/scripts/population.js && json2csv -i ./database/data-json/population.json -f id,id_country,year,value -o ./database/data-csv/population.csv",
     "jo": "node -r dotenv/config ./database/scripts/jo.js && json2csv -i ./database/data-json/jo.json -f id,year,id_city,season -o ./database/data-csv/jo.csv",
     "medal": "node -r dotenv/config ./database/scripts/medal.js && json2csv -i ./database/data-json/medal_1.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal_1.csv && json2csv -i ./database/data-json/medal_2.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal_2.csv && json2csv -i ./database/data-json/medal_3.json -f id,type,id_jo,id_event,id_athlete -o ./database/data-csv/medal_3.csv",
     "generate-csv": "npm run country && npm run year && npm run sport && npm run event && npm run season && npm run gpd && npm run city && npm run jo && npm run athlete && npm run medal",
@@ -46,6 +48,7 @@
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.1.0",
     "nodemon": "^2.0.13",

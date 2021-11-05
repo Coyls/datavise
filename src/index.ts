@@ -35,7 +35,7 @@ app.listen(port, () => {
       res.send(allRecords);
     });
 
-    console.log(node.properties.name);
+    console.log(node.properties);
   } finally {
     await session.close();
   }
