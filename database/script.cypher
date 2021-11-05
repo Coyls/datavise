@@ -23,6 +23,12 @@ CREATE (gpd:Gpd {id: row.id, value:row.value})
 CREATE (gpd)-[:GPD_IN_YEAR]->(year)
 CREATE (gpd)-[:GPD_IN_COUNTRY]->(country)
 
+LOAD CSV WITH HEADERS FROM "file:///population.csv" AS row
+MATCH (year:Year {year:row.year}), (country:Country {id:row.id_country})
+CREATE (poulation:Population {id: row.id, value:row.value})
+CREATE (poulation)-[:POPULATION_IN_YEAR]->(year)
+CREATE (poulation)-[:POPULATION_IN_COUNTRY]->(country)
+
 LOAD CSV WITH HEADERS FROM "file:///city.csv" AS row
 MATCH (country:Country {id:row.id_country})
 CREATE (city:City {id: row.id, name:row.name, lat:row.lat ,lng:row.lng})
