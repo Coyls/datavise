@@ -4,6 +4,7 @@ CREATE CONSTRAINT cityIdConstraint ON (c:City) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT countryIdConstraint ON (c:Country) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT eventIdConstraint ON (c:Event) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT gpdIdConstraint ON (c:Gpd) ASSERT c.id IS UNIQUE; 
+CREATE CONSTRAINT populationIdConstraint ON (c:Population) ASSERT c.id IS UNIQUE; 
 CREATE CONSTRAINT joIdConstraint ON (c:Jo) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT seasonIdConstraint ON (c:Season) ASSERT c.season IS UNIQUE; 
