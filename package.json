@@ -39,12 +39,14 @@
   },
   "homepage": "https://github.com/Coyls/datavise#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "csvtojson": "^2.0.10",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "neo4j-driver": "^4.3.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
