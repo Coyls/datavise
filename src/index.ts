@@ -82,15 +82,11 @@ app.listen(port, () => {
     });
     /////////////////////////////////////////////////////////////////////////
   } finally {
+    // /!\/!\/!\/!\/!\ A REMETTRE /!\/!\/!\/!\/!\
     // await session.close();
   }
 
+  // /!\/!\/!\/!\/!\ A REMETTRE /!\/!\/!\/!\/!\
   // on application exit:
   // await driver.close();
 })();
-
-// A DELETE QUAND JE SERAIS SUR DE MON CODE...
-/* 
-      "start": "node -r dotenv/config ./server/index.js",
-      "dev": "nodemon -r dotenv/config ./server/index.js",
-      */

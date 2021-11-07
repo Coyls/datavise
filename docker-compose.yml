@@ -11,7 +11,11 @@ services:
     ports:
       - "3000:3000"
     depends_on:
+      neo4j:
+        condition: service_healthy
+    links:
       - neo4j
+    restart: always
     networks:
       - backend
   neo4j:
@@ -31,8 +35,15 @@ services:
       - ./database/neo4j/plugins:/plugins
       - ./database/neo4j/neo4j:/data
       - ./database/neo4j/import:/import
+    healthcheck:
+      test: ["CMD", "wget", "http://localhost:7474"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
     networks:
       - backend
+    restart: always
 
 networks:
   backend:
