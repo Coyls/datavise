@@ -35,7 +35,7 @@ app.listen(port, () => {
 
     try {
       const result = await session.run(
-        "MATCH (year:Year) WHERE year.year = $year MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year) MATCH (population:Population)-[:POPULATION_IN_YEAR]->(year) MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal) WHERE medal.type <> $type MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete) MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country) MATCH (gpd)-[:GPD_IN_COUNTRY]->(country) MATCH (population)-[:POPULATION_IN_COUNTRY]->(country) RETURN DISTINCT country.name as Country, year.year as Year, count(medal) as Medals, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC",
+        "MATCH (year:Year) WHERE year.year = $year MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year) MATCH (population:Population)-[:POPULATION_IN_YEAR]->(year) MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal) WHERE medal.type <> $type MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete) MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country) MATCH (gpd)-[:GPD_IN_COUNTRY]->(country) MATCH (population)-[:POPULATION_IN_COUNTRY]->(country) RETURN DISTINCT country.iso as Country, year.year as Year, count(medal) as Medals, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC",
         { year: "2016", type: "none" }
       );
 
@@ -63,7 +63,7 @@ app.listen(port, () => {
     const session = driver.session();
     try {
       const result = await session.run(
-        "MATCH (year:Year) WHERE year.year = $year MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year) MATCH (population:Population)-[:POPULATION_IN_YEAR]->(year) MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal) WHERE medal.type <> $type MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete) MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country) MATCH (gpd)-[:GPD_IN_COUNTRY]->(country) MATCH (population)-[:POPULATION_IN_COUNTRY]->(country) RETURN DISTINCT country.name as Country, year.year as Year, count(medal) as Medals, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC",
+        "MATCH (year:Year) WHERE year.year = $year MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year) MATCH (population:Population)-[:POPULATION_IN_YEAR]->(year) MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal) WHERE medal.type <> $type MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete) MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country) MATCH (gpd)-[:GPD_IN_COUNTRY]->(country) MATCH (population)-[:POPULATION_IN_COUNTRY]->(country) RETURN DISTINCT country.iso as Country, year.year as Year, count(medal) as Medals, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC",
         { year: req.body.year, type: "none" }
       );
 
