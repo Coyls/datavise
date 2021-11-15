@@ -2,6 +2,14 @@ import express from "express";
 import neo4j from "neo4j-driver";
 import cors from "cors";
 
+interface ITest {
+  year: string;
+  country: string;
+  medals: number;
+  population: string;
+  gpd: string;
+}
+
 const app = express();
 const port = 3000 || process.env.PORT;
 
@@ -43,15 +51,15 @@ app.listen(port, () => {
 
       const allRecords = result.records;
 
-      const dataTest = allRecords.map((rec) => {
+      const dataTest: ITest[] = allRecords.map((rec) => {
         const medals = rec.get(2);
 
         return {
-          year: rec.get(1),
-          country: rec.get(0),
-          medals: medals.low,
-          population: rec.get(3),
-          gpd: rec.get(4),
+          year: rec.get(1) as string,
+          country: rec.get(0) as string,
+          medals: medals.low as number,
+          population: rec.get(3) as string,
+          gpd: rec.get(4) as string,
         };
       });
       res.send(dataTest);

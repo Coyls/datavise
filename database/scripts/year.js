@@ -1,5 +1,6 @@
-import fs from 'fs'
-import { env } from 'process';
+
+const fs = require('fs')
+const { env } = require('process')
 
 const jsonFilePath = env.DATA_JSON + 'year.json'
 
