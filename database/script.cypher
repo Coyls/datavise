@@ -7,12 +7,11 @@
 // CREATE INDEX FOR (c:Season) ON (c.season); 
 // CREATE INDEX FOR (c:Year) ON (c.year);
 
+// CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
+
 CREATE CONSTRAINT cityIdConstraint ON (c:City) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT countryIdConstraint ON (c:Country) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT gpdIdConstraint ON (c:Gpd) ASSERT c.id IS UNIQUE; 
-CREATE CONSTRAINT populationIdConstraint ON (c:Population) ASSERT c.id IS UNIQUE; 
 CREATE CONSTRAINT joIdConstraint ON (c:Jo) ASSERT c.id IS UNIQUE;
-CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT seasonIdConstraint ON (c:Season) ASSERT c.season IS UNIQUE; 
 CREATE CONSTRAINT yearIdConstraint ON (c:Year) ASSERT c.year IS UNIQUE;
 
@@ -24,17 +23,15 @@ CREATE (coutry:Year {year:row.year})
 
 LOAD CSV WITH HEADERS FROM "file:///gpd.csv" AS row
 MATCH (year:Year {year:row.year}), (country:Country {id:row.id_country})
-CREATE (country)-[:GPD_IN_YEAR {gpd:row.value}]->(year)
+CREATE (country)-[:GPD_IN_YEAR {value:row.value}]->(year)
 
 LOAD CSV WITH HEADERS FROM "file:///budjet.csv" AS row
 MATCH (year:Year {year:row.year}), (country:Country {id:row.id_country})
-CREATE (country)-[:BUDJET_IN_YEAR {budjet:row.value}]->(year)
+CREATE (country)-[:BUDJET_IN_YEAR {value:row.value}]->(year)
 
 LOAD CSV WITH HEADERS FROM "file:///population.csv" AS row
 MATCH (year:Year {year:row.year}), (country:Country {id:row.id_country})
-CREATE (poulation:Population {id: row.id, value:row.value})
-CREATE (poulation)-[:POPULATION_IN_YEAR]->(year)
-CREATE (poulation)-[:POPULATION_IN_COUNTRY]->(country)
+CREATE (country)-[:POPULATION_IN_YEAR {value:row.value}]->(year)
 
 LOAD CSV WITH HEADERS FROM "file:///city.csv" AS row
 MATCH (country:Country {id:row.id_country})
@@ -55,23 +52,10 @@ LOAD CSV WITH HEADERS FROM "file:///athlete.csv" AS row
 MATCH (jo:Jo {id:row.id_jo}), (country:Country {id:row.id_country})
 CREATE (country)-[:ATHLETE_FROM_COUNTRY {value:row.nb_athlete}]->(jo)
 
-LOAD CSV WITH HEADERS FROM "file:///medal_1.csv" AS row
+LOAD CSV WITH HEADERS FROM "file:///medal.csv" AS row
 MATCH (jo:Jo {id: row.id_jo}),(country:Country {id: row.id_country})
-CREATE (medal:Medal {id: row.id, type: row.type})
-CREATE (medal)-[:MEDAL_IN_JO]->(jo)
-CREATE (medal)-[:MEDAL_WIN_BY_COUNTRY]->(country)
+CREATE (jo)-[:MEDAL_WIN_BY_COUNTRY {type:row.type, value:row.value}]->(country)
 
-LOAD CSV WITH HEADERS FROM "file:///medal_2.csv" AS row
-MATCH (jo:Jo {id: row.id_jo}),(country:Country {id: row.id_country})
-CREATE (medal:Medal {id: row.id, type: row.type})
-CREATE (medal)-[:MEDAL_IN_JO]->(jo)
-CREATE (medal)-[:MEDAL_WIN_BY_COUNTRY]->(country)
-
-LOAD CSV WITH HEADERS FROM "file:///medal_3.csv" AS row
-MATCH (jo:Jo {id: row.id_jo}),(country:Country {id: row.id_country})
-CREATE (medal:Medal {id: row.id, type: row.type})
-CREATE (medal)-[:MEDAL_IN_JO]->(jo)
-CREATE (medal)-[:MEDAL_WIN_BY_COUNTRY]->(country)
 
 
 

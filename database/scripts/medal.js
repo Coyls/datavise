@@ -1,33 +1,65 @@
-
-
 (async () => {
-
 
     const csv = require('csvtojson')
     const fs = require('fs')
     const { env } = require('process')
 
-
     const csvFilePath = env.DATA_RAW + 'JO.csv'
-    const jsonFilePath1 = env.DATA_JSON + 'medal_1.json'
-    const jsonFilePath2 = env.DATA_JSON + 'medal_2.json'
-    const jsonFilePath3 = env.DATA_JSON + 'medal_3.json'
+    const jsonFilePath = env.DATA_JSON + 'medal.json'
 
     const josFilePath = env.DATA_JSON + 'jo.json'
     const countriesFilePath = env.DATA_JSON + 'country.json'
-
 
     const jos = require(josFilePath)
     const countries = require(countriesFilePath)
     const jsonArray = await csv().fromFile(csvFilePath);
 
-
-    let medals_1 = []
-    let medals_2 = []
-    let medals_3 = []
     let medalId = 0
 
-    jsonArray.forEach(medal => {
+    const medalsData = jsonArray.reduce((acc, medal) => {
+        if (medal.Year < 1960) return acc
+
+        const seasonToCheck = medal.Season
+
+        const jo = jos.find(jo => jo.year === parseInt(medal.Year) && jo.season === seasonToCheck.toLowerCase())
+        const country = countries.find(country => country.noc === medal.NOC)
+
+        if (!country) return acc
+
+
+        const rawTypeMedal = medal.Medal
+
+        const type = (rawTypeMedal === 'NA') ? "none" : rawTypeMedal.toLowerCase()
+
+        const indexCheck = acc.findIndex(ac => (ac.type === type) && (ac.id_jo === jo.id) && (ac.id_country === country.id))
+
+        if (indexCheck !== -1) {
+            const exist = acc[indexCheck].event.find(e => e === medal.Event)
+            if (!exist) {
+                acc[indexCheck].value++
+                acc[indexCheck].event.push(medal.Event)
+            }
+        } else {
+            acc.push({
+                id: medalId++,
+                type,
+                value: 0,
+                id_jo: jo.id,
+                id_country: country.id,
+                event: []
+            })
+        }
+
+        return acc
+
+    }, [])
+
+    const medals = medalsData.map(medal => {
+        delete medal.event
+        return medal
+    })
+
+    /* jsonArray.forEach(medal => {
 
         if (medal.Year < 1960) return
 
@@ -40,11 +72,26 @@
 
         if (!jo) console.log(medal)
 
-        const type = (medal.Medal === "NA") ? "none" : medal.Medal
+
+
+        switch (medal.Medal) {
+            case 'Gold':
+                break
+            case 'Silver':
+                break;
+            case 'Bronze':
+                break;
+            case 'NA':
+                break;
+            default:
+                console.log("Error type medal : " + medal.Medal);
+        }
+
 
         const medalToPush = {
             id: medalId,
-            type,
+            type: '',
+            value: 0,
             id_jo: jo.id,
             id_country: country.id
         }
@@ -60,13 +107,10 @@
         }
 
         medalId++
-    })
+    }) */
 
-    console.log(medals_1.length + " medals has been created !")
-    fs.writeFile(jsonFilePath1, JSON.stringify(medals_1), () => console.log("medal.csv created !"))
-    console.log(medals_2.length + " medals has been created !")
-    fs.writeFile(jsonFilePath2, JSON.stringify(medals_2), () => console.log("medal.csv created !"))
-    console.log(medals_3.length + " medals has been created !")
-    fs.writeFile(jsonFilePath3, JSON.stringify(medals_3), () => console.log("medal.csv created !"))
+
+    console.log(medals.length + " medals has been created !")
+    fs.writeFile(jsonFilePath, JSON.stringify(medals), () => console.log("medal.csv created !"))
 
 })()
