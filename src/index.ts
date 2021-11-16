@@ -1,14 +1,7 @@
 import express from "express";
 import neo4j from "neo4j-driver";
 import cors from "cors";
-
-interface ITest {
-  year: string;
-  country: string;
-  medals: number;
-  population: string;
-  gpd: string;
-}
+import { IMedals } from "./types";
 
 const app = express();
 const port = 3000 || process.env.PORT;
@@ -24,7 +17,7 @@ app.use(express.json());
 console.log(process.env.NODE_ENV);
 
 app.get("/", (req, res) => {
-  res.send("Test");
+  res.send("Root Api");
 });
 
 app.listen(port, () => {
@@ -38,31 +31,28 @@ app.listen(port, () => {
   );
 
   // GET
-  app.get("/test", async (req, res) => {
+  app.get("/medals", async (req, res) => {
     const session = driver.session();
 
     const year = req.query?.year ? req.query.year : "2016";
 
     try {
       const result = await session.run(
-        "MATCH (year:Year) WHERE year.year = $year MATCH (gpd:Gpd)-[:GPD_IN_YEAR]->(year) MATCH (population:Population)-[:POPULATION_IN_YEAR]->(year) MATCH (year)<-[:JO_IN_YEAR]-(jo:Jo)<-[:MEDAL_IN_JO]-(medal:Medal) WHERE medal.type <> $type MATCH (medal)-[:MEDAL_WIN_BY_ATHLETE]->(athlete:Athlete) MATCH (athlete)-[:ATHLETE_FROM_COUNTRY]->(country:Country) MATCH (gpd)-[:GPD_IN_COUNTRY]->(country) MATCH (population)-[:POPULATION_IN_COUNTRY]->(country) RETURN DISTINCT country.iso as Country, year.year as Year, count(medal) as Medals, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC",
+        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) WHERE m.type <> 'none' RETURN year.year as year, n.iso as country, m.type as type, m.value as value",
         { year, type: "none" }
       );
 
       const allRecords = result.records;
 
-      const dataTest: ITest[] = allRecords.map((rec) => {
-        const medals = rec.get(2);
-
+      const medals: IMedals[] = allRecords.map((rec) => {
         return {
-          year: rec.get(1) as string,
-          country: rec.get(0) as string,
-          medals: medals.low as number,
-          population: rec.get(3) as string,
-          gpd: rec.get(4) as string,
+          year: rec.get(0) as string,
+          country: rec.get(1) as string,
+          type: rec.get(2) as string,
+          value: rec.get(3) as string,
         };
       });
-      res.send(dataTest);
+      res.send(medals);
     } finally {
       await session.close();
     }

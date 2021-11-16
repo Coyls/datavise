@@ -49,12 +49,12 @@ CREATE (jo)-[:JO_IN_YEAR]->(year)
 CREATE (jo)-[:JO_IN_CITY]->(city)
 
 LOAD CSV WITH HEADERS FROM "file:///athlete.csv" AS row
-MATCH (jo:Jo {id:row.id_jo}), (country:Country {id:row.id_country})
+MATCH (jo:Jo {id:row.id_jo}),(country:Country {id:row.id_country})
 CREATE (country)-[:ATHLETE_FROM_COUNTRY {value:row.nb_athlete}]->(jo)
 
 LOAD CSV WITH HEADERS FROM "file:///medal.csv" AS row
-MATCH (jo:Jo {id: row.id_jo}),(country:Country {id: row.id_country})
-CREATE (jo)-[:MEDAL_WIN_BY_COUNTRY {type:row.type, value:row.value}]->(country)
+MATCH (jo:Jo {id:row.id_jo}),(country:Country {id:row.id_country})
+CREATE (jo)<-[:MEDAL_WIN_BY_COUNTRY {type:row.type, value:row.value}]-(country)
 
 
 

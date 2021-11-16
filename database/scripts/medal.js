@@ -31,23 +31,34 @@
 
         const type = (rawTypeMedal === 'NA') ? "none" : rawTypeMedal.toLowerCase()
 
-        const indexCheck = acc.findIndex(ac => (ac.type === type) && (ac.id_jo === jo.id) && (ac.id_country === country.id))
+        const indexCheck = acc.findIndex(ac => (ac.id_jo === jo.id) && (ac.id_country === country.id))
 
         if (indexCheck !== -1) {
             const exist = acc[indexCheck].event.find(e => e === medal.Event)
             if (!exist) {
-                acc[indexCheck].value++
+                if (type !== "none") acc[indexCheck].total++
+                acc[indexCheck][type]++
                 acc[indexCheck].event.push(medal.Event)
             }
         } else {
-            acc.push({
+
+            const itemToPush = {
                 id: medalId++,
-                type,
-                value: 0,
+                gold: 0,
+                silver: 0,
+                bronze: 0,
+                none: 0,
+                total: 0,
                 id_jo: jo.id,
                 id_country: country.id,
                 event: []
-            })
+            }
+
+            itemToPush[type]++
+            if (type !== "none") itemToPush.total++
+
+            acc.push(itemToPush)
+
         }
 
         return acc
@@ -58,56 +69,6 @@
         delete medal.event
         return medal
     })
-
-    /* jsonArray.forEach(medal => {
-
-        if (medal.Year < 1960) return
-
-        const seasonToCheck = medal.Season
-
-        const jo = jos.find(jo => jo.year === parseInt(medal.Year) && jo.season === seasonToCheck.toLowerCase())
-        let country = countries.find(country => country.noc === medal.NOC)
-
-        if (!country) country = { id: null }
-
-        if (!jo) console.log(medal)
-
-
-
-        switch (medal.Medal) {
-            case 'Gold':
-                break
-            case 'Silver':
-                break;
-            case 'Bronze':
-                break;
-            case 'NA':
-                break;
-            default:
-                console.log("Error type medal : " + medal.Medal);
-        }
-
-
-        const medalToPush = {
-            id: medalId,
-            type: '',
-            value: 0,
-            id_jo: jo.id,
-            id_country: country.id
-        }
-
-
-
-        if (medalId <= 75000) {
-            medals_1.push(medalToPush)
-        } else if (medalId > 75000 && medalId <= 150000) {
-            medals_2.push(medalToPush)
-        } else if (medalId > 150000) {
-            medals_3.push(medalToPush)
-        }
-
-        medalId++
-    }) */
 
 
     console.log(medals.length + " medals has been created !")
