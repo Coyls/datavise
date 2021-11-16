@@ -54,7 +54,7 @@ CREATE (country)-[:ATHLETE_FROM_COUNTRY {value:row.nb_athlete}]->(jo)
 
 LOAD CSV WITH HEADERS FROM "file:///medal.csv" AS row
 MATCH (jo:Jo {id:row.id_jo}),(country:Country {id:row.id_country})
-CREATE (jo)<-[:MEDAL_WIN_BY_COUNTRY {type:row.type, value:row.value}]-(country)
+CREATE (jo)<-[:MEDAL_WIN_BY_COUNTRY { gold:row.gold, silver:row.silver, bronze:row.bronze, none:row.none, total:row.total }]-(country)
 
 
 

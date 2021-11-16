@@ -26,7 +26,6 @@
 
         if (!country) return acc
 
-
         const rawTypeMedal = medal.Medal
 
         const type = (rawTypeMedal === 'NA') ? "none" : rawTypeMedal.toLowerCase()
@@ -34,11 +33,14 @@
         const indexCheck = acc.findIndex(ac => (ac.id_jo === jo.id) && (ac.id_country === country.id))
 
         if (indexCheck !== -1) {
-            const exist = acc[indexCheck].event.find(e => e === medal.Event)
+            const exist = acc[indexCheck].event.find(e => (e.event === medal.Event) && (e.type === type))
             if (!exist) {
                 if (type !== "none") acc[indexCheck].total++
                 acc[indexCheck][type]++
-                acc[indexCheck].event.push(medal.Event)
+                acc[indexCheck].event.push({
+                    event: medal.Event,
+                    type
+                })
             }
         } else {
 
@@ -57,6 +59,11 @@
             itemToPush[type]++
             if (type !== "none") itemToPush.total++
 
+            itemToPush.event.push({
+                event: medal.Event,
+                type
+            })
+
             acc.push(itemToPush)
 
         }
@@ -69,7 +76,6 @@
         delete medal.event
         return medal
     })
-
 
     console.log(medals.length + " medals has been created !")
     fs.writeFile(jsonFilePath, JSON.stringify(medals), () => console.log("medal.csv created !"))
