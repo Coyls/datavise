@@ -23,8 +23,8 @@ COMMAND_SERVER = npm start
 Exemple :
 
 ```s
-DATA_JSON = METTRE EXEMPLE
-DATA_RAW = METTRE EXEMPLE
+DATA_JSON = "/home/user/datavise/database/data-json/"
+DATA_RAW = "/home/user/datavise/database/raw-data/"
 ```
 
 ---
