@@ -18,3 +18,8 @@ RETURN n.iso as country, gpd.value as gpd
 // --------------- /populations
 MATCH (year:Year {year:"2016"})<-[population:POPULATION_IN_YEAR]-(n:Country)
 RETURN n.iso as country, population.value as population
+
+// --------------- /gpds-by-population
+MATCH (y:Year {year : "2016"})<-[r:POPULATION_IN_YEAR]-(c:Country)
+MATCH (y:Year {year : "2016"})<-[z:GPD_IN_YEAR]-(c:Country)
+RETURN DISTINCT c.name as country, r.value as population, z.value as gpd

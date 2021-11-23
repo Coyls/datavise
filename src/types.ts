@@ -16,3 +16,8 @@ export interface IPopulation {
   country: string;
   population: number;
 }
+
+export interface IGpdByPopulation {
+  country: string;
+  gpdByPopulation: number;
+}

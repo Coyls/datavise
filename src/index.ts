@@ -1,7 +1,7 @@
 import express from "express";
 import neo4j from "neo4j-driver";
 import cors from "cors";
-import { IMedal, IGpd, IPopulation } from "./types";
+import { IMedal, IGpd, IPopulation, IGpdByPopulation } from "./types";
 
 const app = express();
 const port = 3000 || process.env.PORT;
@@ -72,6 +72,30 @@ app.listen(port, () => {
         };
       });
       res.send(gpds);
+    } finally {
+      await session.close();
+    }
+  });
+
+  app.get("/gpd-by-population", async (req, res) => {
+    const session = driver.session();
+    const year = req.query?.year ? req.query.year : "2016";
+    try {
+      const result = await session.run(
+        "MATCH (y:Year {year : $year})<-[r:POPULATION_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[z:GPD_IN_YEAR]-(c:Country) RETURN DISTINCT c.name as country, r.value as population, z.value as gpd",
+        { year }
+      );
+      const allRecords = result.records;
+      const gpdByPopulation: IGpdByPopulation[] = allRecords.map((rec) => {
+        const population = parseInt(rec.get(1)),
+          gpd = parseInt(rec.get(2));
+        const gpdByPopulation = Math.ceil(gpd / population);
+        return {
+          country: rec.get(0) as string,
+          gpdByPopulation,
+        };
+      });
+      res.send(gpdByPopulation);
     } finally {
       await session.close();
     }
