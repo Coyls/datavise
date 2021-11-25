@@ -16,7 +16,7 @@ CREATE CONSTRAINT seasonIdConstraint ON (c:Season) ASSERT c.season IS UNIQUE;
 CREATE CONSTRAINT yearIdConstraint ON (c:Year) ASSERT c.year IS UNIQUE;
 
 LOAD CSV WITH HEADERS FROM "file:///country.csv" AS row
-CREATE (coutry:Country {id: row.id, name : row.name, iso: row.iso, noc: row.noc})
+CREATE (coutry:Country {id: row.id, name : row.name, iso: row.iso, noc: row.noc, continent: row.continent})
 
 LOAD CSV WITH HEADERS FROM "file:///year.csv" AS row
 CREATE (coutry:Year {year:row.year})
