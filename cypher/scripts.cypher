@@ -23,3 +23,12 @@ RETURN n.iso as country, population.value as population
 MATCH (y:Year {year : "2016"})<-[r:POPULATION_IN_YEAR]-(c:Country)
 MATCH (y:Year {year : "2016"})<-[z:GPD_IN_YEAR]-(c:Country)
 RETURN DISTINCT c.name as country, r.value as population, z.value as gpd
+
+// --------------- /medals-and-budjet
+MATCH (y:Year {year : "2016"})<-[r:BUDJET_IN_YEAR]-(c:Country)
+MATCH (y:Year {year : "2016"})<-[:JO_IN_YEAR]-(jo:Jo)<-[medals:MEDAL_WIN_BY_COUNTRY]-(c:Country) 
+RETURN DISTINCT c.name as country, r.value as budjet, medals.total as medals
+
+// --------------- /athlete-by-continent
+MATCH (y:Year {year : "2016"})<-[:JO_IN_YEAR]-(jo:Jo)<-[athlete:ATHLETE_FROM_COUNTRY]-(c:Country)
+RETURN DISTINCT  

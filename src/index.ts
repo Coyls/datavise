@@ -1,7 +1,13 @@
 import express from "express";
 import neo4j from "neo4j-driver";
 import cors from "cors";
-import { IMedal, IGpd, IPopulation, IGpdByPopulation } from "./types";
+import {
+  IMedal,
+  IGpd,
+  IPopulation,
+  IGpdByPopulation,
+  IMedalsAndBudjet,
+} from "./types";
 
 const app = express();
 const port = 3000 || process.env.PORT;
@@ -30,7 +36,7 @@ app.listen(port, () => {
     neo4j.auth.basic(process.env.USER_NEO4J, process.env.MDP_NEOJ4)
   );
 
-  // GET
+  // ---------- /medals
   app.get("/medals", async (req, res) => {
     const session = driver.session();
     const year = req.query?.year ? req.query.year : "2016";
@@ -56,6 +62,7 @@ app.listen(port, () => {
     }
   });
 
+  // ---------- /gpds
   app.get("/gpds", async (req, res) => {
     const session = driver.session();
     const year = req.query?.year ? req.query.year : "2016";
@@ -77,6 +84,7 @@ app.listen(port, () => {
     }
   });
 
+  // ---------- /gpd-by-population
   app.get("/gpd-by-population", async (req, res) => {
     const session = driver.session();
     const year = req.query?.year ? req.query.year : "2016";
@@ -87,8 +95,8 @@ app.listen(port, () => {
       );
       const allRecords = result.records;
       const gpdByPopulation: IGpdByPopulation[] = allRecords.map((rec) => {
-        const population = parseInt(rec.get(1)),
-          gpd = parseInt(rec.get(2));
+        const population = parseInt(rec.get(1));
+        const gpd = parseInt(rec.get(2));
         const gpdByPopulation = Math.ceil(gpd / population);
         return {
           country: rec.get(0) as string,
@@ -101,6 +109,7 @@ app.listen(port, () => {
     }
   });
 
+  // ---------- /populations
   app.get("/populations", async (req, res) => {
     const session = driver.session();
     const year = req.query?.year ? req.query.year : "2016";
@@ -117,6 +126,34 @@ app.listen(port, () => {
         };
       });
       res.send(populations);
+    } finally {
+      await session.close();
+    }
+  });
+
+  // ---------- /medals-and-budjet
+  app.get("/medals-and-budjet", async (req, res) => {
+    const session = driver.session();
+    const year = req.query?.year ? req.query.year : "2016";
+    try {
+      const result = await session.run(
+        "MATCH (y:Year {year : $year})<-[r:BUDJET_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[:JO_IN_YEAR]-(jo:Jo)<-[medals:MEDAL_WIN_BY_COUNTRY]-(c:Country) RETURN DISTINCT c.name as country, r.value as budjet, medals.total as medals",
+        { year }
+      );
+      const allRecords = result.records;
+      const medalsAndBudjet: IMedalsAndBudjet[] = allRecords.map((rec) => {
+        const budjetRaw = rec.get(1);
+        const medals = parseInt(rec.get(2));
+
+        const budjet = parseFloat(budjetRaw.replace(",", ""));
+
+        return {
+          country: rec.get(0) as string,
+          budjet,
+          medals,
+        };
+      });
+      res.send(medalsAndBudjet);
     } finally {
       await session.close();
     }

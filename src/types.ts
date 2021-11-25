@@ -21,3 +21,9 @@ export interface IGpdByPopulation {
   country: string;
   gpdByPopulation: number;
 }
+
+export interface IMedalsAndBudjet {
+  country: string;
+  medals: number;
+  budjet: number;
+}
