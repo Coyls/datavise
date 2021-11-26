@@ -27,3 +27,8 @@ export interface IMedalsAndBudjet {
   medals: number;
   budjet: number;
 }
+
+export interface IAthletesByContinent {
+  continent: string;
+  nbAthlete: number;
+}

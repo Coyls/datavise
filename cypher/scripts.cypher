@@ -31,4 +31,4 @@ RETURN DISTINCT c.name as country, r.value as budjet, medals.total as medals
 
 // --------------- /athlete-by-continent
 MATCH (y:Year {year : "2016"})<-[:JO_IN_YEAR]-(jo:Jo)<-[athlete:ATHLETE_FROM_COUNTRY]-(c:Country)
-RETURN DISTINCT  
+RETURN DISTINCT c.continent as continent, sum(athlete.value) as nbAthlete

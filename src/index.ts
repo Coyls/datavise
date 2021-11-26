@@ -7,6 +7,7 @@ import {
   IPopulation,
   IGpdByPopulation,
   IMedalsAndBudjet,
+  IAthletesByContinent,
 } from "./types";
 
 const app = express();
@@ -154,6 +155,33 @@ app.listen(port, () => {
         };
       });
       res.send(medalsAndBudjet);
+    } finally {
+      await session.close();
+    }
+  });
+
+  // ---------- /athletes-by-continent
+  app.get("/athletes-by-continent", async (req, res) => {
+    const session = driver.session();
+    const year = req.query?.year ? req.query.year : "2016";
+    try {
+      const result = await session.run(
+        "MATCH (y:Year {year : $year})<-[:JO_IN_YEAR]-(jo:Jo)<-[athlete:ATHLETE_FROM_COUNTRY]-(c:Country) RETURN DISTINCT c.continent as continent, sum(athlete.value) as nbAthlete",
+        { year }
+      );
+      const allRecords = result.records;
+      const athletesByContinent: IAthletesByContinent[] = allRecords.map(
+        (rec) => {
+          const continent = rec.get(0) === "" ? "unknown" : rec.get(0);
+          const nbAthlete = rec.get(1);
+
+          return {
+            continent,
+            nbAthlete,
+          };
+        }
+      );
+      res.send(athletesByContinent);
     } finally {
       await session.close();
     }
