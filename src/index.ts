@@ -177,7 +177,7 @@ app.listen(port, () => {
 
           return {
             continent,
-            nbAthlete,
+            nbAthlete: nbAthlete.low,
           };
         }
       );
