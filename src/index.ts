@@ -18,10 +18,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-/* use((req, resp, next) => {
-  next();
-}, cors({ maxAge: 84600 })); */
-
 console.log(process.env.NODE_ENV);
 
 app.get("/", (req, res) => {
