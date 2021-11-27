@@ -33,12 +33,8 @@ export interface IAthletesByContinent {
   nbAthlete: number;
 }
 
-export interface IGpdYear {
-  year: number;
-  gpd: number;
-}
-
 export interface IGpdEurope {
+  year: number;
   country: string;
-  gpdYear: IGpdYear[];
+  gpd: number;
 }

@@ -194,21 +194,13 @@ app.listen(port, () => {
       );
       const allRecords = result.records;
 
-      const gpsEurope: IGpdEurope[] = allRecords.reduce((acc, rec) => {
-        const countryAcc = acc.find((item) => item.country === rec.get(0));
-
-        countryAcc
-          ? countryAcc.gpdYear.push({
-              year: rec.get(1),
-              gpd: parseInt(rec.get(2)),
-            })
-          : acc.push({
-              country: rec.get(0),
-              gpdYear: [{ year: rec.get(1), gpd: parseInt(rec.get(2)) }],
-            });
-
-        return acc;
-      }, []);
+      const gpsEurope: IGpdEurope[] = allRecords.map((rec) => {
+        return {
+          year: parseInt(rec.get(1)),
+          country: rec.get(0),
+          gpd: parseInt(rec.get(2)),
+        };
+      });
       res.send(gpsEurope);
     } finally {
       await session.close();
