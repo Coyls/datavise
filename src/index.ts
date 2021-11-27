@@ -199,7 +199,7 @@ app.listen(port, () => {
       const allRecords = result.records;
 
       const gpsEurope: IGpdEurope[] = allRecords.reduce((acc, rec) => {
-        const countryAcc = acc.find((item) => item.name === rec.get(0));
+        const countryAcc = acc.find((item) => item.country === rec.get(0));
 
         countryAcc
           ? countryAcc.gpdYear.push({
@@ -207,7 +207,7 @@ app.listen(port, () => {
               gpd: parseInt(rec.get(2)),
             })
           : acc.push({
-              country: rec.get(1),
+              country: rec.get(0),
               gpdYear: [{ year: rec.get(1), gpd: parseInt(rec.get(2)) }],
             });
 
