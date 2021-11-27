@@ -8,6 +8,7 @@ import {
   IGpdByPopulation,
   IMedalsAndBudjet,
   IAthletesByContinent,
+  IGpdEurope,
 } from "./types";
 
 const app = express();
@@ -182,6 +183,37 @@ app.listen(port, () => {
         }
       );
       res.send(athletesByContinent);
+    } finally {
+      await session.close();
+    }
+  });
+
+  // ---------- /gpd-europe
+  app.get("/gpd-europe", async (req, res) => {
+    const session = driver.session();
+    try {
+      const result = await session.run(
+        "MATCH (y:Year)<-[z:GPD_IN_YEAR]-(c:Country {continent: 'Europe'}) RETURN c.name as country, y.year as year, z.value as value ",
+        {}
+      );
+      const allRecords = result.records;
+
+      const gpsEurope: IGpdEurope[] = allRecords.reduce((acc, rec) => {
+        const countryAcc = acc.find((item) => item.name === rec.get(0));
+
+        countryAcc
+          ? countryAcc.gpdYear.push({
+              year: rec.get(1),
+              gpd: parseInt(rec.get(2)),
+            })
+          : acc.push({
+              country: rec.get(1),
+              gpdYear: [{ year: rec.get(1), gpd: parseInt(rec.get(2)) }],
+            });
+
+        return acc;
+      }, []);
+      res.send(gpsEurope);
     } finally {
       await session.close();
     }

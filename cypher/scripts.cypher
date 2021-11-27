@@ -29,6 +29,10 @@ MATCH (y:Year {year : "2016"})<-[r:BUDJET_IN_YEAR]-(c:Country)
 MATCH (y:Year {year : "2016"})<-[:JO_IN_YEAR]-(jo:Jo)<-[medals:MEDAL_WIN_BY_COUNTRY]-(c:Country) 
 RETURN DISTINCT c.name as country, r.value as budjet, medals.total as medals
 
-// --------------- /athlete-by-continent
+// --------------- /athletes-by-continent
 MATCH (y:Year {year : "2016"})<-[:JO_IN_YEAR]-(jo:Jo)<-[athlete:ATHLETE_FROM_COUNTRY]-(c:Country)
 RETURN DISTINCT c.continent as continent, sum(athlete.value) as nbAthlete
+
+// --------------- /gpd-europe
+MATCH (y:Year)<-[z:GPD_IN_YEAR]-(c:Country {continent: "Europe"})
+RETURN c.name as country, y.year as year, z.value as value 
