@@ -41,7 +41,7 @@ app.listen(port, () => {
     const season = req.query?.season ? req.query.season : "all";
     try {
       const result = await session.run(
-        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season) RETURN n.iso as country, m.total as total, s.season as season",
+        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) MATCH (n:Country)-[p:POPULATION_IN_YEAR]->(year:Year {year:$year}) MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season) RETURN n.iso as country, m.total as total, p.value as population, s.season as season",
         { year }
       );
       const allRecords = result.records;
@@ -49,14 +49,19 @@ app.listen(port, () => {
       const filteredRecords =
         season === "all"
           ? allRecords
-          : allRecords.filter((rec) => rec.get(2) === season);
+          : allRecords.filter((rec) => rec.get(3) === season);
 
-      const medals = filteredRecords.map((rec) => {
-        const total = parseInt(rec.get(1));
+      const medals: IMedal[] = filteredRecords.map((rec) => {
+        const medals = parseInt(rec.get(1));
+        const population = parseInt(rec.get(2));
+
+        const totalRaw = (medals * 1000000) / population;
+
+        const total = totalRaw.toFixed(4);
 
         return {
           country: rec.get(0) as string,
-          total,
+          total: parseFloat(total),
         };
       });
       res.send(medals);
