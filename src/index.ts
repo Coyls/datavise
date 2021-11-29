@@ -55,7 +55,7 @@ app.listen(port, () => {
         const population = parseInt(rec.get(2));
         const medals = parseInt(rec.get(1));
 
-        const total = (medals * 1000) / population;
+        const total = Math.ceil((medals * 100000) / population);
         return {
           country: rec.get(0) as string,
           total,
