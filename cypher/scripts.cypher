@@ -39,6 +39,5 @@ RETURN c.name as country, y.year as year, z.value as value
 
 // --------------- /medals
 MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: "2016"})
-MATCH (n:Country)-[z:GPD_IN_YEAR]->(y:Year {year : "2016"})
 MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season)
-RETURN n.iso as country, m.total as total, z.value as population, s.season as season
+RETURN n.iso as country, m.total as total, s.season as season
