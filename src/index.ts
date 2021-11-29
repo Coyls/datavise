@@ -9,6 +9,7 @@ import {
   IMedalsAndBudjet,
   IAthletesByContinent,
   IGpdEurope,
+  IMedalsForPopulation,
 } from "./types";
 
 const app = express();
@@ -38,20 +39,27 @@ app.listen(port, () => {
   app.get("/medals", async (req, res) => {
     const session = driver.session();
     const year = req.query?.year ? req.query.year : "2016";
+    const season = req.query?.season ? req.query.season : "all";
     try {
       const result = await session.run(
-        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) RETURN n.iso as country, m.gold as gold, m.silver as silver , m.bronze as bronze, m.none as none, m.total as total",
+        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) MATCH (n:Country)-[z:GPD_IN_YEAR]->(y:Year {year : $year}) MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season) RETURN n.iso as country, m.total as total, z.value as population, s.season as season",
         { year }
       );
       const allRecords = result.records;
-      const medals: IMedal[] = allRecords.map((rec) => {
+
+      const filteredRecords =
+        season === "all"
+          ? allRecords
+          : allRecords.filter((rec) => rec.get(3) === season);
+
+      const medals: IMedal[] = filteredRecords.map((rec) => {
+        const population = parseInt(rec.get(2));
+        const medals = parseInt(rec.get(1));
+
+        const total = (medals * 1000) / population;
         return {
           country: rec.get(0) as string,
-          gold: parseInt(rec.get(1)),
-          silver: parseInt(rec.get(2)),
-          bronze: parseInt(rec.get(3)),
-          none: parseInt(rec.get(4)),
-          total: parseInt(rec.get(5)),
+          total,
         };
       });
       res.send(medals);

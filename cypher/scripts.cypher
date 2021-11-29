@@ -7,7 +7,7 @@ MATCH (year)<-[budjet:BUDJET_IN_YEAR]-(country)
 MATCH (year)<-[population:POPULATION_IN_YEAR]-(country)
 RETURN DISTINCT country.name as Country,  year.year as Year, medal.value as Medals, medal.type as TypeMedal, budjet.value as Budjet, population.value as Population, gpd.value as GPD ORDER BY toInteger(gpd.value) DESC
 
-// --------------- /medals
+// --------------- /medals OBSOLETE
 MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: "2016"})
 RETURN n.iso as country, m.gold as gold, m.silver as silver , m.bronze as bronze, m.none as none, m.total as total
 
@@ -36,3 +36,9 @@ RETURN DISTINCT c.continent as continent, sum(athlete.value) as nbAthlete
 // --------------- /gpd-europe
 MATCH (y:Year)<-[z:GPD_IN_YEAR]-(c:Country {continent: "Europe"})
 RETURN c.name as country, y.year as year, z.value as value 
+
+// --------------- /medals
+MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: "2016"})
+MATCH (n:Country)-[z:GPD_IN_YEAR]->(y:Year {year : "2016"})
+MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season)
+RETURN n.iso as country, m.total as total, z.value as population, s.season as season

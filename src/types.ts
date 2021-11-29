@@ -1,9 +1,5 @@
 export interface IMedal {
   country: string;
-  gold: number;
-  silver: number;
-  bronze: number;
-  none: number;
   total: number;
 }
 
