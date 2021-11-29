@@ -9,7 +9,6 @@ import {
   IMedalsAndBudjet,
   IAthletesByContinent,
   IGpdEurope,
-  IMedalsForPopulation,
 } from "./types";
 
 const app = express();
