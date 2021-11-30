@@ -216,8 +216,9 @@ app.listen(port, () => {
 
       const packData: IGpdsContinent[] = gpdsContinentsRaw.reduce(
         (acc, item) => {
-          if (item.gpd !== null) {
+          if (!isNaN(item.gpd)) {
             const exist = acc.find((part) => part.continent === item.continent);
+            console.log("item.gpd:", item.gpd);
 
             exist
               ? exist.values.push({
@@ -242,17 +243,16 @@ app.listen(port, () => {
 
       const reducedData: IGpdsContinent[] = packData.map((continent) => {
         const reducedContinent: IYearGpd[] = continent.values.reduce(
-          (acc, item) => {
-            if (item.gpd !== null) {
-              const year = acc.find((y) => y.year === item.year);
+          (acc: IYearGpd[], item) => {
+            const yearGpd: IYearGpd = acc.find((y) => y.year === item.year);
 
-              year
-                ? (year.gpd = year.gpd + item.gpd)
-                : acc.push({
-                    year: item.year,
-                    gpd: item.gpd,
-                  });
-            }
+            yearGpd
+              ? (yearGpd.gpd = yearGpd.gpd + item.gpd)
+              : acc.push({
+                  year: item.year,
+                  gpd: item.gpd,
+                });
+
             return acc;
           },
           []
