@@ -10,6 +10,7 @@ import {
   IAthletesByContinent,
   IGpdsContinentsRaw,
   IGpdsContinent,
+  IYearGpd,
 } from "./types";
 
 const app = express();
@@ -239,7 +240,30 @@ app.listen(port, () => {
         []
       );
 
-      const gpdContinent = packData.map((item) => {
+      const reducedData: IGpdsContinent[] = packData.map((continent) => {
+        const reducedContinent: IYearGpd[] = continent.values.reduce(
+          (acc, item) => {
+            const year = acc.find((y) => y.year === item.year);
+
+            year
+              ? (year.gpd = year.gpd + item.gpd)
+              : acc.push({
+                  year: item.year,
+                  gpd: item.gpd,
+                });
+
+            return acc;
+          },
+          []
+        );
+
+        return {
+          continent: continent.continent,
+          values: reducedContinent,
+        };
+      });
+
+      const gpdContinent = reducedData.map((item) => {
         item.values.sort((a, b) => a.year - b.year);
         return item;
       });
