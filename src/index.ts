@@ -8,7 +8,8 @@ import {
   IGpdByPopulation,
   IMedalsAndBudjet,
   IAthletesByContinent,
-  IGpdEurope,
+  IGpdsContinentsRaw,
+  IGpdsContinent,
 } from "./types";
 
 const app = express();
@@ -194,24 +195,56 @@ app.listen(port, () => {
     }
   });
 
-  // ---------- /gpd-europe
-  app.get("/gpd-europe", async (req, res) => {
+  // ---------- /gpd-continent
+  app.get("/gpd-continent", async (req, res) => {
     const session = driver.session();
     try {
       const result = await session.run(
-        "MATCH (y:Year)<-[z:GPD_IN_YEAR]-(c:Country {continent: 'Europe'}) RETURN c.name as country, y.year as year, z.value as value ",
+        "MATCH (y:Year)<-[g:GPD_IN_YEAR]-(c:Country) RETURN c.continent as continent, y.year as year, g.value as value",
         {}
       );
       const allRecords = result.records;
 
-      const gpsEurope: IGpdEurope[] = allRecords.map((rec) => {
+      const gpdsContinentsRaw: IGpdsContinentsRaw[] = allRecords.map((rec) => {
         return {
           year: parseInt(rec.get(1)),
-          country: rec.get(0),
+          continent: rec.get(0) as string,
           gpd: parseInt(rec.get(2)),
         };
       });
-      res.send(gpsEurope);
+
+      const packData: IGpdsContinent[] = gpdsContinentsRaw.reduce(
+        (acc, item) => {
+          if (item.gpd !== null) {
+            const exist = acc.find((part) => part.continent === item.continent);
+
+            exist
+              ? exist.values.push({
+                  year: item.year,
+                  gpd: item.gpd,
+                })
+              : acc.push({
+                  continent: item.continent,
+                  values: [
+                    {
+                      year: item.year,
+                      gpd: item.gpd,
+                    },
+                  ],
+                });
+          }
+
+          return acc;
+        },
+        []
+      );
+
+      const gpdContinent = packData.map((item) => {
+        item.values.sort((a, b) => a.year - b.year);
+        return item;
+      });
+
+      res.send(gpdContinent);
     } finally {
       await session.close();
     }
