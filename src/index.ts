@@ -243,15 +243,16 @@ app.listen(port, () => {
       const reducedData: IGpdsContinent[] = packData.map((continent) => {
         const reducedContinent: IYearGpd[] = continent.values.reduce(
           (acc, item) => {
-            const year = acc.find((y) => y.year === item.year);
+            if (item.gpd !== null) {
+              const year = acc.find((y) => y.year === item.year);
 
-            year
-              ? (year.gpd = year.gpd + item.gpd)
-              : acc.push({
-                  year: item.year,
-                  gpd: item.gpd,
-                });
-
+              year
+                ? (year.gpd = year.gpd + item.gpd)
+                : acc.push({
+                    year: item.year,
+                    gpd: item.gpd,
+                  });
+            }
             return acc;
           },
           []
