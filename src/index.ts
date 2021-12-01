@@ -100,7 +100,7 @@ app.listen(port, () => {
     const year = req.query?.year ? req.query.year : "2016";
     try {
       const result = await session.run(
-        "MATCH (y:Year {year : $year})<-[r:POPULATION_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[z:GPD_IN_YEAR]-(c:Country) RETURN DISTINCT c.name as country, r.value as population, z.value as gpd",
+        "MATCH (y:Year {year : $year})<-[r:POPULATION_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[z:GPD_IN_YEAR]-(c:Country) RETURN DISTINCT c.iso as country, r.value as population, z.value as gpd",
         { year }
       );
       const allRecords = result.records;
