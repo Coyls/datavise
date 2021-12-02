@@ -1,70 +1,83 @@
-import csv from 'csvtojson';
-import fs from 'fs'
-import { env } from 'process';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+(async () => {
 
-const csvFilePath = env.DATA_RAW + 'JO.csv'
-const jsonFilePath1 = env.DATA_JSON + 'medal_1.json'
-const jsonFilePath2 = env.DATA_JSON + 'medal_2.json'
-const jsonFilePath3 = env.DATA_JSON + 'medal_3.json'
+    const csv = require('csvtojson')
+    const fs = require('fs')
+    const { env } = require('process')
 
-const josFilePath = env.DATA_JSON + 'jo.json'
-const eventsFilePath = env.DATA_JSON + 'event.json'
-const athleteFilePath1 = env.DATA_JSON + 'athlete_1.json'
-const athleteFilePath2 = env.DATA_JSON + 'athlete_2.json'
+    const csvFilePath = env.DATA_RAW + 'JO.csv'
+    const jsonFilePath = env.DATA_JSON + 'medal.json'
 
-const jos = require(josFilePath)
-const events = require(eventsFilePath)
-const athletes1 = require(athleteFilePath1)
-const athletes2 = require(athleteFilePath2)
-const jsonArray = await csv().fromFile(csvFilePath);
+    const josFilePath = env.DATA_JSON + 'jo.json'
+    const countriesFilePath = env.DATA_JSON + 'country.json'
 
-const athletes = [...athletes1, ...athletes2]
+    const jos = require(josFilePath)
+    const countries = require(countriesFilePath)
+    const jsonArray = await csv().fromFile(csvFilePath);
 
-let medals_1 = []
-let medals_2 = []
-let medals_3 = []
-let medalId = 0
+    let medalId = 0
 
-jsonArray.forEach(medal => {
+    const medalsData = jsonArray.reduce((acc, medal) => {
+        if (medal.Year < 1960) return acc
 
-    if (medal.Year < 1960) return
+        const seasonToCheck = medal.Season
 
-    const seasonToCheck = medal.Season
+        const jo = jos.find(jo => jo.year === parseInt(medal.Year) && jo.season === seasonToCheck.toLowerCase())
+        const country = countries.find(country => country.noc === medal.NOC)
 
-    const jo = jos.find(jo => jo.year === medal.Year && jo.season === seasonToCheck.toLowerCase())
-    const event = events.find(event => event.name === medal.Event)
-    const athlete = athletes.find(athlete => athlete.name === medal.Name)
+        if (!country) return acc
 
-    if (!jo) console.log(medal)
+        const rawTypeMedal = medal.Medal
 
-    const type = (medal.Medal === "NA") ? "none" : medal.Medal
+        const type = (rawTypeMedal === 'NA') ? "none" : rawTypeMedal.toLowerCase()
 
-    const medalToPush = {
-        id: medalId,
-        type,
-        id_jo: jo.id,
-        id_event: event.id,
-        id_athlete: athlete.id
-    }
+        const indexCheck = acc.findIndex(ac => (ac.id_jo === jo.id) && (ac.id_country === country.id))
 
+        if (indexCheck !== -1) {
+            const exist = acc[indexCheck].event.find(e => (e.event === medal.Event) && (e.type === type))
+            if (!exist) {
+                if (type !== "none") acc[indexCheck].total++
+                acc[indexCheck][type]++
+                acc[indexCheck].event.push({
+                    event: medal.Event,
+                    type
+                })
+            }
+        } else {
 
+            const itemToPush = {
+                id: medalId++,
+                gold: 0,
+                silver: 0,
+                bronze: 0,
+                none: 0,
+                total: 0,
+                id_jo: jo.id,
+                id_country: country.id,
+                event: []
+            }
 
-    if (medalId <= 75000) {
-        medals_1.push(medalToPush)
-    } else if (medalId > 75000 && medalId <= 150000) {
-        medals_2.push(medalToPush)
-    } else if (medalId > 150000) {
-        medals_3.push(medalToPush)
-    }
+            itemToPush[type]++
+            if (type !== "none") itemToPush.total++
 
-    medalId++
-})
+            itemToPush.event.push({
+                event: medal.Event,
+                type
+            })
 
-console.log(medals_1.length + " medals has been created !")
-fs.writeFile(jsonFilePath1, JSON.stringify(medals_1), () => console.log("medal.csv created !"))
-console.log(medals_2.length + " medals has been created !")
-fs.writeFile(jsonFilePath2, JSON.stringify(medals_2), () => console.log("medal.csv created !"))
-console.log(medals_3.length + " medals has been created !")
-fs.writeFile(jsonFilePath3, JSON.stringify(medals_3), () => console.log("medal.csv created !"))
+            acc.push(itemToPush)
+
+        }
+
+        return acc
+
+    }, [])
+
+    const medals = medalsData.map(medal => {
+        delete medal.event
+        return medal
+    })
+
+    console.log(medals.length + " medals has been created !")
+    fs.writeFile(jsonFilePath, JSON.stringify(medals), () => console.log("medal.csv created !"))
+
+})()
