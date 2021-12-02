@@ -103,10 +103,11 @@ app.listen(port, () => {
         const population = parseInt(rec.get(1));
         const gpd = parseInt(rec.get(2));
         const gpdByPopulation = Math.ceil(gpd / population);
+        const popByMillion = population / 1000000;
         return {
           country: rec.get(0) as string,
           gpdByPopulation,
-          population,
+          population: popByMillion,
         };
       });
       res.send(gpdByPopulation);
