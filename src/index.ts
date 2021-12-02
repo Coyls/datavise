@@ -109,6 +109,7 @@ app.listen(port, () => {
         return {
           country: rec.get(0) as string,
           gpdByPopulation,
+          population,
         };
       });
       res.send(gpdByPopulation);
