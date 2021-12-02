@@ -8,7 +8,9 @@ import {
   IGpdByPopulation,
   IMedalsAndBudjet,
   IAthletesByContinent,
-  IGpdEurope,
+  IGpdsContinentsRaw,
+  IGpdsContinent,
+  IYearGpd,
 } from "./types";
 
 const app = express();
@@ -41,7 +43,7 @@ app.listen(port, () => {
     const season = req.query?.season ? req.query.season : "all";
     try {
       const result = await session.run(
-        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) MATCH (n:Country)-[p:POPULATION_IN_YEAR]->(year:Year {year:$year}) MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season) RETURN n.iso as country, m.total as total, p.value as population, s.season as season",
+        "MATCH (n:Country)-[m:MEDAL_WIN_BY_COUNTRY]->(jo:Jo)-[:JO_IN_YEAR]->(year:Year {year: $year}) MATCH (jo:Jo)-[j:JO_IN_SEASON]->(s:Season) RETURN n.iso as country, m.total as total, s.season as season",
         { year }
       );
       const allRecords = result.records;
@@ -49,19 +51,14 @@ app.listen(port, () => {
       const filteredRecords =
         season === "all"
           ? allRecords
-          : allRecords.filter((rec) => rec.get(3) === season);
+          : allRecords.filter((rec) => rec.get(2) === season);
 
       const medals: IMedal[] = filteredRecords.map((rec) => {
-        const medals = parseInt(rec.get(1));
-        const population = parseInt(rec.get(2));
-
-        const totalRaw = (medals * 1000000) / population;
-
-        const total = totalRaw.toFixed(4);
+        const total = parseInt(rec.get(1));
 
         return {
           country: rec.get(0) as string,
-          total: parseFloat(total),
+          total,
         };
       });
       res.send(medals);
@@ -98,7 +95,7 @@ app.listen(port, () => {
     const year = req.query?.year ? req.query.year : "2016";
     try {
       const result = await session.run(
-        "MATCH (y:Year {year : $year})<-[r:POPULATION_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[z:GPD_IN_YEAR]-(c:Country) RETURN DISTINCT c.name as country, r.value as population, z.value as gpd",
+        "MATCH (y:Year {year : $year})<-[r:POPULATION_IN_YEAR]-(c:Country) MATCH (y:Year {year : $year})<-[z:GPD_IN_YEAR]-(c:Country) RETURN DISTINCT c.iso as country, r.value as population, z.value as gpd",
         { year }
       );
       const allRecords = result.records;
@@ -195,24 +192,80 @@ app.listen(port, () => {
     }
   });
 
-  // ---------- /gpd-europe
-  app.get("/gpd-europe", async (req, res) => {
+  // ---------- /gpd-continent
+  app.get("/gpd-continent", async (req, res) => {
     const session = driver.session();
     try {
       const result = await session.run(
-        "MATCH (y:Year)<-[z:GPD_IN_YEAR]-(c:Country {continent: 'Europe'}) RETURN c.name as country, y.year as year, z.value as value ",
+        "MATCH (y:Year)<-[g:GPD_IN_YEAR]-(c:Country) RETURN c.continent as continent, y.year as year, g.value as value",
         {}
       );
       const allRecords = result.records;
 
-      const gpsEurope: IGpdEurope[] = allRecords.map((rec) => {
+      const gpdsContinentsRaw: IGpdsContinentsRaw[] = allRecords.map((rec) => {
         return {
           year: parseInt(rec.get(1)),
-          country: rec.get(0),
+          continent: rec.get(0) as string,
           gpd: parseInt(rec.get(2)),
         };
       });
-      res.send(gpsEurope);
+
+      const packData: IGpdsContinent[] = gpdsContinentsRaw.reduce(
+        (acc, item) => {
+          if (!isNaN(item.gpd)) {
+            const exist = acc.find((part) => part.continent === item.continent);
+            console.log("item.gpd:", item.gpd);
+
+            exist
+              ? exist.values.push({
+                  year: item.year,
+                  gpd: item.gpd,
+                })
+              : acc.push({
+                  continent: item.continent,
+                  values: [
+                    {
+                      year: item.year,
+                      gpd: item.gpd,
+                    },
+                  ],
+                });
+          }
+
+          return acc;
+        },
+        []
+      );
+
+      const reducedData: IGpdsContinent[] = packData.map((continent) => {
+        const reducedContinent: IYearGpd[] = continent.values.reduce(
+          (acc: IYearGpd[], item) => {
+            const yearGpd: IYearGpd = acc.find((y) => y.year === item.year);
+
+            yearGpd
+              ? (yearGpd.gpd = yearGpd.gpd + item.gpd)
+              : acc.push({
+                  year: item.year,
+                  gpd: item.gpd,
+                });
+
+            return acc;
+          },
+          []
+        );
+
+        return {
+          continent: continent.continent,
+          values: reducedContinent,
+        };
+      });
+
+      const gpdContinent = reducedData.map((item) => {
+        item.values.sort((a, b) => a.year - b.year);
+        return item;
+      });
+
+      res.send(gpdContinent);
     } finally {
       await session.close();
     }
