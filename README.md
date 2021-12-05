@@ -1,5 +1,9 @@
+![map](./ktk-readme.png)
+
 # KTK Data visualization Backend
 
+Link to online site : http://vps-080d9e1e.vps.ovh.net:3100/  
+Link root api : http://vps-080d9e1e.vps.ovh.net:3000/  
 Backend of the data visualization project : [Frontend](https://github.com/Yohan744/KTK-data-visualisation)
 
 ---
@@ -19,7 +23,8 @@ NEO4J_AUTH = neo4j/password
 COMMAND_SERVER = npm start
 ```
 
-`DATA_JSON` and `DATA_RAW` you will need the absolute path to the folder raw-data and data-json.  
+`DATA_JSON` and `DATA_RAW` you will need the absolute path to the folder raw-data and data-json.
+
 Exemple :
 
 ```s
@@ -33,13 +38,13 @@ DATA_RAW = "/home/user/datavise/database/raw-data/"
 
 First you have to generate the csv to fill the database.
 
-```s
+```bash
 npm run generate-csv 
 ```
 
 Then you have to unlock the folder import in the database and copy the csv.
 
-```s
+```bash
 npm run unlock-import
 npm run copy-import
 ```
@@ -48,7 +53,7 @@ npm run copy-import
 
 Now build and run docker
 
-```s
+```bash
 docker-compose build
 docker-compose up -d
 ```
@@ -62,7 +67,7 @@ Go on the file [script.cypher](./database/script.cypher) and copy each block one
 
 To shut down
 
-```s
+```bash
 docker-compose down
 ```
 

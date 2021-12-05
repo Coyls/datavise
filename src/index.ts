@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+  console.log(`Server started at http://localhost:${port}`);
 });
 
 (async () => {
@@ -103,10 +103,11 @@ app.listen(port, () => {
         const population = parseInt(rec.get(1));
         const gpd = parseInt(rec.get(2));
         const gpdByPopulation = Math.ceil(gpd / population);
+        const popByMillion = population / 1000000;
         return {
           country: rec.get(0) as string,
           gpdByPopulation,
-          population,
+          population: popByMillion,
         };
       });
       res.send(gpdByPopulation);
@@ -214,7 +215,6 @@ app.listen(port, () => {
         (acc, item) => {
           if (!isNaN(item.gpd)) {
             const exist = acc.find((part) => part.continent === item.continent);
-            console.log("item.gpd:", item.gpd);
 
             exist
               ? exist.values.push({
