@@ -71,4 +71,4 @@ To shut down
 docker-compose down
 ```
 
-Now you can run the [frontend](https://github.com/Yohan744/KTK-data-visualisation)
+Now you can run the [frontend](https://github.com/Coyls/ktk-dataviz-frontend/)
