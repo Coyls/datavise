@@ -4,7 +4,7 @@
 
 Link to online site : http://vps-080d9e1e.vps.ovh.net:3100/  
 Link root api : http://vps-080d9e1e.vps.ovh.net:3000/  
-Backend of the data visualization project : [Frontend](https://github.com/Yohan744/KTK-data-visualisation)
+Frontend of the data visualization project : [Frontend](https://github.com/Coyls/ktk-dataviz-frontend/)
 
 ---
 
