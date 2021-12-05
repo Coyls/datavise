@@ -20,7 +20,6 @@
         const country = countries.find(country => country.name === budjet.GEO)
 
         if (!country) {
-            console.log(budjet.GEO)
             return
         }
 

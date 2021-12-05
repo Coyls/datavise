@@ -1,14 +1,3 @@
-// CREATE INDEX FOR (c:City) ON (c.id);
-// CREATE INDEX FOR (c:Country) ON (c.id);
-// CREATE INDEX FOR (c:Gpd) ON (c.id); 
-// CREATE INDEX FOR (c:Population) ON (c.id); 
-// CREATE INDEX FOR (c:Jo) ON (c.id);
-// CREATE INDEX FOR (c:Medal) ON (c.id);
-// CREATE INDEX FOR (c:Season) ON (c.season); 
-// CREATE INDEX FOR (c:Year) ON (c.year);
-
-// CREATE CONSTRAINT medalIdConstraint ON (c:Medal) ASSERT c.id IS UNIQUE;
-
 CREATE CONSTRAINT cityIdConstraint ON (c:City) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT countryIdConstraint ON (c:Country) ASSERT c.id IS UNIQUE;
 CREATE CONSTRAINT joIdConstraint ON (c:Jo) ASSERT c.id IS UNIQUE;

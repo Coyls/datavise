@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+  console.log(`Server started at http://localhost:${port}`);
 });
 
 (async () => {
@@ -215,7 +215,6 @@ app.listen(port, () => {
         (acc, item) => {
           if (!isNaN(item.gpd)) {
             const exist = acc.find((part) => part.continent === item.continent);
-            console.log("item.gpd:", item.gpd);
 
             exist
               ? exist.values.push({

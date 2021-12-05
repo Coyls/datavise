@@ -67,49 +67,9 @@
         start++
     }
 
-
-
-
-
-
-
-
-    /*     jsonArray.forEach(athlete => {
-    
-            let exist = false
-    
-            if (checkAthlete.findIndex(check => check === athlete.Name) !== -1) exist = true
-    
-            if (!exist && athlete.Year >= 1960) {
-                checkAthlete.push(athlete.Name)
-    
-                const height = (athlete.Height !== 'NA') ? athlete.Height : null
-                const wheight = (athlete.Weight !== 'NA') ? athlete.Weight : null
-                let country = countries.find(country => country.noc === athlete.NOC)
-    
-                if (!country) country = { id: null }
-    
-                const athleteToPush = {
-                    id: athleteId,
-                    id_country: country.id,
-                }
-    
-                if (athleteId <= 50000) {
-                    athletes_1.push(athleteToPush)
-                } else if (athleteId > 50000) {
-                    athletes_2.push(athleteToPush)
-                }
-    
-    
-                athleteId++
-            }
-        }) */
-
-
     console.log(athletes.length + " athletes has been created !")
     fs.writeFile(jsonFilePath, JSON.stringify(athletes), () => console.log("athletes_1.csv created !"))
-    // console.log(athletes_2.length + " athletes has been created !")
-    // fs.writeFile(jsonFilePath2, JSON.stringify(athletes_2), () => console.log("athletes_2.csv created !"))
+
 
 })()
 
