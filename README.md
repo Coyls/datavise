@@ -95,3 +95,6 @@ Librairie permetant la création de graphique trés personnalisable.
 ## Parcel 
 
 Facilite le developement en js natif.
+
+# Flux de données
+![flux de donnée](./flux-de-donnée.png)
