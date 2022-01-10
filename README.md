@@ -68,7 +68,30 @@ Go on the file [script.cypher](./database/script.cypher) and copy each block one
 To shut down
 
 ```bash
-docker-compose down
+docker-compose downdfez
 ```
 
 Now you can run the [frontend](https://github.com/Coyls/ktk-dataviz-frontend/)
+
+# Choix technique
+
+## Docker 
+
+Facilité le deploiment sur le vps et pouvoir utiliser la base de donnée Neo4J facilement.
+
+## Neo4J
+
+A l'origine du projet nos donnée etaient très nombreuse et il y avait enormement de relation. Au cours du projet nous avons reduit la quantitée de donnée.
+Ce qui rendrait une base relationel classique plus cohérente.
+
+## Mapbox 
+
+Cette librairie permet de mettre en place une très rapidement et de la personnalisé dans le temps impartie cetait la meilleur option au niveau complexité et personnalisation.
+
+## D3.js
+
+Librairie permetant la création de graphique trés personnalisable.
+
+## Parcel 
+
+Facilite le developement en js natif.
